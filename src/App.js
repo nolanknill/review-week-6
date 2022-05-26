@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import './app.scss';
+import Header from './components/Header/Header';
+import Nav from "./components/Nav/Nav";
+import PlantDetails from './components/PlantDetails/PlantDetails';
+import plants from "./data/plants.json";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    selectedPlant: plants[1]
+  }
+  
+  handlePlantChange = (plantId) => {
+    const newSelectedPlant = plants.find((plant) => plantId === plant.id);
+    
+    this.setState({
+      selectedPlant: newSelectedPlant
+    });
+  }
+
+  render() {
+    const nonSelectedPlants = plants.filter((plant) => {
+      return plant.id !== this.state.selectedPlant.id;
+    });
+
+    return (
+      <>
+        <Header />
+        <Nav 
+          plants={nonSelectedPlants} 
+          handlePlantChange={this.handlePlantChange} 
+        />
+        <PlantDetails selectedPlant={this.state.selectedPlant} />
+        <button onClick={() => { this.handlePlantChange(2)} }>Spiky Button!</button>
+      </>
+    );
+  }
 }
 
 export default App;
